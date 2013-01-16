@@ -1,0 +1,20 @@
+import os
+import sys
+
+def iftoday(date):
+	from datetime import datetime
+	cdate=datetime.strptime(date,''%Y-%m-%d)
+	dnow=datetime.now()
+	if dnow.year==cdate.year and dnow.montg==cdate.month and dnow.day==cdate.day:
+		return true
+	else 
+		return false
+		
+def compress(filename)
+	import gzip
+	f_in = open(filename, 'rb')
+	f_out = gzip.open(filename+'gz', 'wb')
+	f_out.writelines(f_in)
+	f_out.close()
+	f_in.close()
+	os.remove(filename)
