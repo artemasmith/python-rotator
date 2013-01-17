@@ -3,18 +3,55 @@ import sys
 
 def iftoday(date):
 	from datetime import datetime
-	cdate=datetime.strptime(date,''%Y-%m-%d)
+	cdate=datetime.strptime(date,'%Y-%m-%d')
 	dnow=datetime.now()
-	if dnow.year==cdate.year and dnow.montg==cdate.month and dnow.day==cdate.day:
-		return true
-	else 
-		return false
-		
-def compress(filename)
+	if dnow.year==cdate.year and dnow.month==cdate.month and dnow.day==cdate.day:
+		return True
+	else:
+		return False
+
+def ifcompressed(filename):
+	import re
+	pat=re.compile('.*.gz$')
+	if pat.match(filename):
+		return True
+	else:
+		return False
+
+def compress(filename):
 	import gzip
 	f_in = open(filename, 'rb')
-	f_out = gzip.open(filename+'gz', 'wb')
+	f_out = gzip.open(filename+'.gz', 'wb')
 	f_out.writelines(f_in)
 	f_out.close()
 	f_in.close()
 	os.remove(filename)
+		
+
+def compresslogs(parentdir):
+	for name,dirs,files in os.walk(parentdir):
+		for f in files:
+			if !iftoday(f) and !ifcompressed(f):
+				compress(name+'/'+f)
+
+def ifmontholder(filename):
+	import re
+	from datetime import datetime
+	pat=re.compile('.gz$')
+	cdate=pat.sub('',filename)
+	cdate=datetime.strptime(cdate,'%Y-%m-%d')
+	dnow=datetime.now()
+	if dnow.year>cdate.year or dnow.month>cdate.month:
+		return True
+	else:
+		return False
+				
+def deleteold(parentdir):
+	for name,dirs,files in os.walk(parentdir):
+		for f in files:
+			if ifmontholder(name+'/'+f):
+				os.remove(name+'/'+f)
+
+
+dir='/var/log/router-log'
+compresslogs(dir)
