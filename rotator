@@ -1,7 +1,7 @@
 import os
 import sys
 
-def iftoday(date):
+def today(date):
 	from datetime import datetime
 	cdate=datetime.strptime(date,'%Y-%m-%d')
 	dnow=datetime.now()
@@ -10,7 +10,7 @@ def iftoday(date):
 	else:
 		return False
 
-def ifcompressed(filename):
+def compressed(filename):
 	import re
 	pat=re.compile('.gz$')
 	if pat.match(filename):
@@ -31,10 +31,10 @@ def compress(filename):
 def compresslogs(parentdir):
 	for name,dirs,files in os.walk(parentdir):
 		for f in files:
-			if !iftoday(f) and !ifcompressed(f):
+			if !today(f) and !compressed(f):
 				compress(name+'/'+f)
 
-def ifmontholder(filename):
+def montholder(filename):
 	import re
 	from datetime import datetime
 	pat=re.compile('.gz$')
@@ -49,9 +49,10 @@ def ifmontholder(filename):
 def deleteold(parentdir):
 	for name,dirs,files in os.walk(parentdir):
 		for f in files:
-			if ifmontholder(name+'/'+f):
+			if montholder(name+'/'+f):
 				os.remove(name+'/'+f)
 
 
 dir='/var/log/router-log'
 compresslogs(dir)
+deleteold(dir)
