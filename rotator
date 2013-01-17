@@ -12,7 +12,7 @@ def iftoday(date):
 
 def ifcompressed(filename):
 	import re
-	pat=re.compile('.*.gz$')
+	pat=re.compile('.gz$')
 	if pat.match(filename):
 		return True
 	else:
